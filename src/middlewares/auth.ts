@@ -17,9 +17,7 @@ export const authenticate = async (req: Request,
     next: NextFunction): Promise<void> => {
     try {
         const authHeaders = req.headers.authorization;
-        
-        // 🔍 LOG 1: Ver qué está llegando
-        console.log("🔍 Authorization Header:", authHeaders);
+     
         
         if (!authHeaders || !authHeaders.startsWith("Bearer")) {
             res.status(401).json({ error: "Token no proporcionado" });
@@ -28,13 +26,11 @@ export const authenticate = async (req: Request,
         
         const token = authHeaders.split(" ")[1];
         
-        // 🔍 LOG 2: Ver el token
-        console.log("🔍 Token:", token);
+       
         
         const decoded = authService.verifyToken(token);
         
-        // 🔍 LOG 3: Ver el decoded
-        console.log("🔍 Decoded:", decoded);
+  
         
         req.user = decoded;
         next();
