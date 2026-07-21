@@ -1,0 +1,39 @@
+# Dependencias
+node_modules/
+npm-debug.log*
+
+# Código compilado
+dist/
+build/
+
+# Variables de entorno
+.env
+.env.dev
+.env.prod
+.env.local
+
+# Logs
+logs/
+*.log
+
+# Git
+.git/
+.gitignore
+
+# Editor
+.vscode/
+.idea/
+*.swp
+
+# Tests
+coverage/
+tests/
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Otros
+README.md
+*.md

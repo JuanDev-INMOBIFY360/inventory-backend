@@ -1,4 +1,3 @@
-// 📁 src/config/database.ts
 import "reflect-metadata";
 import { DataSource } from "typeorm";
 import { config } from "./env";
