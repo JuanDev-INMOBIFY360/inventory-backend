@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { AuthService } from "../services/auth.service";
-
+import logger from "../utils/logger";
 
 const authService = new AuthService();
 
@@ -35,7 +35,7 @@ export const authenticate = async (req: Request,
         req.user = decoded;
         next();
     } catch (error) {
-        console.error("❌ Error en authenticate:", error);
+        logger.error("Error en authenticate:", error);
         res.status(401).json({ error: "Token inválido o expirado" });
     }
 };

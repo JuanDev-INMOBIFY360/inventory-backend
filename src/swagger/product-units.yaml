@@ -1,0 +1,234 @@
+paths:
+  /api/product-units:
+    get:
+      summary: Listar todas las unidades
+      tags: [Unidades]
+      security: []
+      responses:
+        200:
+          description: Lista de unidades
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductUnit'
+
+    post:
+      summary: Crear una nueva unidad
+      tags: [Unidades]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateProductUnit'
+      responses:
+        201:
+          description: Unidad creada exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductUnit'
+        400:
+          description: Error de validación
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/product-units/available:
+    get:
+      summary: Listar unidades disponibles (no vendidas)
+      tags: [Unidades]
+      security: []
+      responses:
+        200:
+          description: Lista de unidades disponibles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductUnit'
+
+  /api/product-units/sold:
+    get:
+      summary: Listar unidades vendidas
+      tags: [Unidades]
+      security: []
+      responses:
+        200:
+          description: Lista de unidades vendidas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductUnit'
+
+  /api/product-units/product/{productId}:
+    get:
+      summary: Listar unidades por producto
+      tags: [Unidades]
+      security: []
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Lista de unidades del producto
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductUnit'
+
+  /api/product-units/serial/{serial}:
+    get:
+      summary: Buscar unidad por serial
+      tags: [Unidades]
+      security: []
+      parameters:
+        - name: serial
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Unidad encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductUnit'
+        404:
+          description: Unidad no encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/product-units/{id}:
+    get:
+      summary: Obtener unidad por ID
+      tags: [Unidades]
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      responses:
+        200:
+          description: Unidad encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductUnit'
+        404:
+          description: Unidad no encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    put:
+      summary: Actualizar unidad
+      tags: [Unidades]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProductUnit'
+      responses:
+        200:
+          description: Unidad actualizada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductUnit'
+
+    delete:
+      summary: Eliminar unidad (solo si no está vendida)
+      tags: [Unidades]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      responses:
+        204:
+          description: Unidad eliminada
+        400:
+          description: No se puede eliminar una unidad vendida
+
+  /api/product-units/bulk:
+    post:
+      summary: Crear múltiples unidades (carga masiva)
+      tags: [Unidades]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - productId
+                - units
+              properties:
+                productId:
+                  type: string
+                  format: uuid
+                  example: "82a0462f-181f-4323-8c23-d46b7a88fb52"
+                units:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/CreateProductUnit'
+      responses:
+        201:
+          description: Unidades creadas exitosamente
+
+  /api/product-units/{id}/sell:
+    patch:
+      summary: Marcar una unidad como vendida
+      tags: [Unidades]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - clientId
+                - salePrice
+              properties:
+                clientId:
+                  type: string
+                  format: uuid
+                  example: "c0ee35a1-5662-447f-80f6-22b45fde902b"
+                salePrice:
+                  type: number
+                  minimum: 0
+                  example: 1900000
+                saleDate:
+                  type: string
+                  format: date
+                  example: "2026-07-19"
+      responses:
+        200:
+          description: Unidad marcada como vendida
