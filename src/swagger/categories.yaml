@@ -1,0 +1,148 @@
+paths:
+  /api/categories:
+    get:
+      summary: Listar todas las categorías
+      tags: [Categorías]
+      security: []
+      responses:
+        200:
+          description: Lista de categorías
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Category'
+
+    post:
+      summary: Crear una nueva categoría
+      tags: [Categorías]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCategory'
+      responses:
+        201:
+          description: Categoría creada exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+        400:
+          description: Error de validación
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        401:
+          description: No autorizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/categories/active:
+    get:
+      summary: Listar categorías activas
+      tags: [Categorías]
+      security: []
+      responses:
+        200:
+          description: Lista de categorías activas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Category'
+
+  /api/categories/{id}:
+    get:
+      summary: Obtener categoría por ID
+      tags: [Categorías]
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      responses:
+        200:
+          description: Categoría encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+        404:
+          description: Categoría no encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    put:
+      summary: Actualizar categoría
+      tags: [Categorías]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCategory'
+      responses:
+        200:
+          description: Categoría actualizada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+        404:
+          description: Categoría no encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    delete:
+      summary: Eliminar categoría
+      tags: [Categorías]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      responses:
+        204:
+          description: Categoría eliminada
+        404:
+          description: Categoría no encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/categories/{id}/toggle-status:
+    patch:
+      summary: Cambiar estado de una categoría
+      tags: [Categorías]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      responses:
+        200:
+          description: Estado cambiado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+        404:
+          description: Categoría no encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'

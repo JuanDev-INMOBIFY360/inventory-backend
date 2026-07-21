@@ -1,0 +1,111 @@
+paths:
+  /api/suppliers:
+    get:
+      summary: Listar todos los proveedores
+      tags: [Proveedores]
+      security: []
+      responses:
+        200:
+          description: Lista de proveedores
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Supplier'
+
+    post:
+      summary: Crear un nuevo proveedor
+      tags: [Proveedores]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSupplier'
+      responses:
+        201:
+          description: Proveedor creado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Supplier'
+        400:
+          description: Error de validación
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/suppliers/{id}:
+    get:
+      summary: Obtener proveedor por ID
+      tags: [Proveedores]
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      responses:
+        200:
+          description: Proveedor encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Supplier'
+        404:
+          description: Proveedor no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    put:
+      summary: Actualizar proveedor
+      tags: [Proveedores]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSupplier'
+      responses:
+        200:
+          description: Proveedor actualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Supplier'
+
+    delete:
+      summary: Eliminar proveedor
+      tags: [Proveedores]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      responses:
+        204:
+          description: Proveedor eliminado
+        404:
+          description: Proveedor no encontrado
+
+  /api/suppliers/{id}/toggle-status:
+    patch:
+      summary: Cambiar estado de un proveedor
+      tags: [Proveedores]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      responses:
+        200:
+          description: Estado cambiado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Supplier'

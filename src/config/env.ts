@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
 import path from "path";
+import logger from "../utils/logger";
 
 // Determinar el entorno
 const nodeEnv = process.env.NODE_ENV || "development";
@@ -12,8 +13,8 @@ const envFileMap: Record<string, string> = {
 
 const envFile = envFileMap[nodeEnv] || ".env.dev";
 
-console.log("Cargando archivo:", envFile);
-console.log("Ruta completa:", path.resolve(process.cwd(), envFile));
+logger.debug(`Cargando archivo: ${envFile}`);
+logger.debug(`Ruta completa: ${path.resolve(process.cwd(), envFile)}`);
 
 // Cargar archivo específico
 dotenv.config({ path: path.resolve(process.cwd(), envFile) });
@@ -43,7 +44,7 @@ export const config = {
     },
 };
 
-console.log("🔍 Config final:", {
+logger.debug("Config final:", {
     host: config.db.host,
     user: config.db.username,
     password: config.db.password ? "****" : "VACÍO",

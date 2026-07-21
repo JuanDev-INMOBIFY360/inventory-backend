@@ -1,0 +1,493 @@
+openapi: 3.0.0
+info:
+  title: API de Inventario Digital
+  version: 1.0.0
+  description: API para gestión de inventario de electrodomésticos
+  contact:
+    name: Soporte
+    email: soporte@inventario.com
+
+servers:
+  - url: http://localhost:3000
+    description: Servidor de Desarrollo
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  parameters:
+    IdParam:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Error de validación"
+        details:
+          type: array
+          items:
+            type: object
+            properties:
+              path:
+                type: string
+                example: "name"
+              message:
+                type: string
+                example: "El nombre es requerido"
+
+    # ==========================================
+    # CATEGORY
+    # ==========================================
+    Category:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          example: "Consolas"
+        description:
+          type: string
+          example: "PlayStation, Xbox, Nintendo"
+        isActive:
+          type: boolean
+          example: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    CreateCategory:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          minLength: 3
+          maxLength: 100
+          example: "Consolas"
+        description:
+          type: string
+          maxLength: 500
+          example: "PlayStation, Xbox, Nintendo"
+        isActive:
+          type: boolean
+          default: true
+
+    UpdateCategory:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 3
+          maxLength: 100
+        description:
+          type: string
+          maxLength: 500
+        isActive:
+          type: boolean
+
+    # ==========================================
+    # PRODUCT
+    # ==========================================
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          example: "PlayStation 5 Slim"
+        brand:
+          type: string
+          example: "Sony"
+        edition:
+          type: string
+          example: "Bundle Fortnite Sony Blanco"
+        content:
+          type: string
+          example: "Flowering Chaos Bundle + 1.000 V-Bucks"
+        type:
+          type: string
+          example: "Digital"
+        storage:
+          type: string
+          example: "825GB"
+        basePrice:
+          type: number
+          example: 1900000
+        isActive:
+          type: boolean
+          example: true
+        category:
+          $ref: '#/components/schemas/Category'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    CreateProduct:
+      type: object
+      required:
+        - name
+        - brand
+        - basePrice
+        - categoryId
+      properties:
+        name:
+          type: string
+          example: "PlayStation 5 Slim"
+        brand:
+          type: string
+          example: "Sony"
+        edition:
+          type: string
+          example: "Bundle Fortnite Sony Blanco"
+        content:
+          type: string
+          example: "Flowering Chaos Bundle + 1.000 V-Bucks"
+        type:
+          type: string
+          example: "Digital"
+        storage:
+          type: string
+          example: "825GB"
+        basePrice:
+          type: number
+          example: 1900000
+        categoryId:
+          type: string
+          format: uuid
+
+    UpdateProduct:
+      type: object
+      properties:
+        name:
+          type: string
+        brand:
+          type: string
+        edition:
+          type: string
+        content:
+          type: string
+        type:
+          type: string
+        storage:
+          type: string
+        basePrice:
+          type: number
+        categoryId:
+          type: string
+          format: uuid
+
+    # ==========================================
+    # PRODUCT UNIT
+    # ==========================================
+    ProductUnit:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        serial:
+          type: string
+          example: "PS5-001-2026-001"
+        status:
+          type: string
+          example: "Nuevo Sellado"
+        purchasePrice:
+          type: number
+          example: 670000
+        salePrice:
+          type: number
+          example: 1900000
+        isSold:
+          type: boolean
+          example: false
+        entryDate:
+          type: string
+          format: date
+          example: "2026-07-16"
+        saleDate:
+          type: string
+          format: date
+          example: "2026-07-19"
+        product:
+          $ref: '#/components/schemas/Product'
+        client:
+          $ref: '#/components/schemas/Client'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    CreateProductUnit:
+      type: object
+      required:
+        - serial
+        - productId
+      properties:
+        serial:
+          type: string
+          example: "PS5-001-2026-001"
+        status:
+          type: string
+          example: "Nuevo Sellado"
+        purchasePrice:
+          type: number
+          example: 670000
+        entryDate:
+          type: string
+          format: date
+          example: "2026-07-16"
+        productId:
+          type: string
+          format: uuid
+
+    UpdateProductUnit:
+      type: object
+      properties:
+        serial:
+          type: string
+        status:
+          type: string
+        purchasePrice:
+          type: number
+        entryDate:
+          type: string
+          format: date
+
+    # ==========================================
+    # CLIENT
+    # ==========================================
+    Client:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          example: "Yordy"
+        phone:
+          type: string
+          example: "305 4845548"
+        email:
+          type: string
+          format: email
+          example: "yordy@email.com"
+        address:
+          type: string
+          example: "Calle 123, Ciudad"
+        isActive:
+          type: boolean
+          example: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    CreateClient:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          example: "Yordy"
+        phone:
+          type: string
+          example: "305 4845548"
+        email:
+          type: string
+          format: email
+          example: "yordy@email.com"
+        address:
+          type: string
+          example: "Calle 123, Ciudad"
+
+    UpdateClient:
+      type: object
+      properties:
+        name:
+          type: string
+        phone:
+          type: string
+        email:
+          type: string
+          format: email
+        address:
+          type: string
+
+    # ==========================================
+    # SUPPLIER
+    # ==========================================
+    Supplier:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          example: "Proveedor Mayorista S.A."
+        contactName:
+          type: string
+          example: "Juan Pérez"
+        email:
+          type: string
+          format: email
+          example: "juan@mayorista.com"
+        phone:
+          type: string
+          example: "300 1234567"
+        address:
+          type: string
+          example: "Calle 45 # 20-30, Bogotá"
+        notes:
+          type: string
+          example: "Proveedor principal de consolas"
+        isActive:
+          type: boolean
+          example: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    CreateSupplier:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          example: "Proveedor Mayorista S.A."
+        contactName:
+          type: string
+          example: "Juan Pérez"
+        email:
+          type: string
+          format: email
+          example: "juan@mayorista.com"
+        phone:
+          type: string
+          example: "300 1234567"
+        address:
+          type: string
+          example: "Calle 45 # 20-30, Bogotá"
+        notes:
+          type: string
+          example: "Proveedor principal de consolas"
+
+    UpdateSupplier:
+      type: object
+      properties:
+        name:
+          type: string
+        contactName:
+          type: string
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+        address:
+          type: string
+        notes:
+          type: string
+
+    # ==========================================
+    # MOVEMENT
+    # ==========================================
+    Movement:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        type:
+          type: string
+          enum: [ENTRY, SALE, RETURN, ADJUST]
+          example: "SALE"
+        reason:
+          type: string
+          example: "Venta normal"
+        unit:
+          $ref: '#/components/schemas/ProductUnit'
+        user:
+          $ref: '#/components/schemas/User'
+        createdAt:
+          type: string
+          format: date-time
+
+    CreateMovement:
+      type: object
+      required:
+        - type
+        - unitId
+      properties:
+        type:
+          type: string
+          enum: [ENTRY, SALE, RETURN, ADJUST]
+          example: "SALE"
+        unitId:
+          type: string
+          format: uuid
+        reason:
+          type: string
+          example: "Venta normal"
+
+    # ==========================================
+    # USER
+    # ==========================================
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          example: "Admin Principal"
+        email:
+          type: string
+          format: email
+          example: "admin@tienda.com"
+        role:
+          type: string
+          enum: [admin, seller]
+          example: "admin"
+        isActive:
+          type: boolean
+          example: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
